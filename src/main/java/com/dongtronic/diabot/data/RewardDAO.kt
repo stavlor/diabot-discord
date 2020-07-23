@@ -10,11 +10,7 @@ class RewardDAO private constructor() {
 
 
     init {
-        if (System.getenv("REDIS_URL") != null) {
-            jedis = Jedis(System.getenv("REDIS_URL"))
-        } else if (System.getenv("DIABOT_REDIS_URL") != null) {
-            jedis = Jedis(System.getenv("DIABOT_REDIS_URL"))
-        }
+        jedis = Jedis(System.getenv("REDIS_URL"))
     }
 
     fun getSimpleRewards(guildId: String): MutableList<String>? {
@@ -62,7 +58,6 @@ class RewardDAO private constructor() {
 
     fun getOptOut(guildId: String, userId: String): Boolean {
         val key = RedisKeyFormats.rewardOptout.replace("{{guildid}}", guildId)
-
         val optOutListLength = jedis!!.llen(key)
 
         val optOutList = jedis!!.lrange(key, 0, optOutListLength - 1)
